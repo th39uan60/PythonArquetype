@@ -1,0 +1,4 @@
+# python cache packages
+**/__pycache__/*
+# python environments configs
+**/envs/**

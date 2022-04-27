@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-arq
+  labels:
+    app: python-arq
+spec:
+  selector:
+    matchLabels:
+      app: python-arq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: python-arq
+    spec:
+      containers:
+      # el nombre de la imagen (en este caso dentro de docker hub)
+      - image: th39uan60/python_arq
+        # aquí se definen las recursos que usará cada POD a desplegar de esta aplicación
+        resources:
+            limits:
+              cpu: 100m
+              memory: 1Gi
+            requests:
+              cpu: 60m
+              memory: 500Mi
+        ports:
+        # puerto de salida del contenedor
+        - containerPort: 5000
+        name: pythonarq-container
+        # aquí se definen los "secrets" que se usarán como variables de entorno
+        env:
+        - name: USUARIOBD
+          valueFrom:
+            secretKeyRef:
+              name: pythonsecrets
+              key: usuario_bd
+        - name: PASSWORDBD
+          valueFrom:
+            secretKeyRef:
+              name: pythonsecrets
+              key: password_bd

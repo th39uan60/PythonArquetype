@@ -4,6 +4,10 @@ y donde se incluyen los routers relacionados
 
 from fastapi import FastAPI
 from .routers import (clientes, productos, ventas)
+from .models import bd
+
+# creamos la estructura de base de datos
+bd.ModeloBase.metadata.create_all(bd.motor_bd)
 
 app = FastAPI()
 

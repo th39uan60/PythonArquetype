@@ -2,6 +2,7 @@
 de seguridad a los métodos de entrada del servicio
 """
 
+import base64
 from typing import (Any, Callable)
 from functools import wraps
 import requests
@@ -32,3 +33,11 @@ def requiere_token(func: Callable) -> Callable:
             return Response(status_code=error.response.status_code)
 
     return wrapper
+
+
+def decodificar_base64(textoCodificado: str):
+    """Decodifica un texto base 64"""
+    bytes_base64 = textoCodificado.encode('ascii')
+    bytes_decodificado = base64.b64decode(bytes_base64)
+
+    return bytes_decodificado.decode('ascii')

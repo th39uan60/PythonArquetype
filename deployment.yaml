@@ -2,18 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: python-arq
-  labels:
-    app: python-arq
 spec:
   selector:
     matchLabels:
-      app: python-arq
-  strategy:
-    type: Recreate
+      run: python-arq
+  replicas: 2
   template:
     metadata:
       labels:
-        app: python-arq
+        run: python-arq
     spec:
       containers:
       # el nombre de la imagen (en este caso dentro de docker hub)
@@ -28,10 +25,10 @@ spec:
               memory: 500Mi
         ports:
         # puerto de salida del contenedor
-        - containerPort: 5000
+        - containerPort: 80
         name: pythonarq-container
         # aquí se definen los "secrets" que se usarán como variables de entorno
-        env:
+        env: 
         - name: USUARIOBD
           valueFrom:
             secretKeyRef:

@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python-arq
+  name: pos-app
 spec:
   selector:
     matchLabels:
-      run: python-arq
+      run: pos-app
   replicas: 2
   template:
     metadata:
       labels:
-        run: python-arq
+        run: pos-app
     spec:
       containers:
       # el nombre de la imagen (en este caso dentro de docker hub)
@@ -18,24 +18,29 @@ spec:
         # aquí se definen las recursos que usará cada POD a desplegar de esta aplicación
         resources:
             limits:
-              cpu: 100m
-              memory: 1Gi
+              cpu: 100m # miliCPUs / milicores => 100/1,000 = 10% de un Core 
+              memory: 500Mi # Gi = GB, Mi = MB, Ki = KB => 1GB
             requests:
-              cpu: 60m
-              memory: 500Mi
+              cpu: 50m # 5% de un Core
+              memory: 100Mi # 100MB
         ports:
         # puerto de salida del contenedor
         - containerPort: 80
-        name: pythonarq-container
+        name: pos-container
         # aquí se definen los "secrets" que se usarán como variables de entorno
         env: 
+        - name: SERVIDORBD # servidor + puerto
+          valueFrom:
+            secretKeyRef:
+              name: pos-secrets
+              key: servidor_bd
         - name: USUARIOBD
           valueFrom:
             secretKeyRef:
-              name: pythonsecrets
+              name: pos-secrets
               key: usuario_bd
         - name: PASSWORDBD
           valueFrom:
             secretKeyRef:
-              name: pythonsecrets
+              name: pos-secrets
               key: password_bd

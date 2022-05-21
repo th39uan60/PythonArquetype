@@ -1,17 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pythonarq-service
+  name: pos-svc
 spec:
   selector:
-    run: python-arq
-  type: NodePort
+    run: pos-app
+  type: NodePort # necesario para relacionar con un ingress
   ports:
   - protocol: "TCP"
-    # puerto de comunicación del servicio
+    # puerto de comunicación del servicio (dentro del cluster)
     port: 5000
     # puerto de comunicación (salida) del pod
     targetPort: 80
-    # puerto externo (salida) del servicio, rango: 30,000 - 32,767
-    nodePort: 32001
-  type: LoadBalancer
+    # puerto externo (fuera del cluster) del servicio, rango: 30,000 - 32,767
+    nodePort: 32002

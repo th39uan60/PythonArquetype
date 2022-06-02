@@ -13,7 +13,6 @@ from pydantic import BaseModel
 
 class VentaRequest(BaseModel):
     """Representa los datos de una venta para peticiones"""
-    uid: str
     prods: list[int] = []
     cte_id: Optional[int] = 0
     subtotal: float
@@ -23,7 +22,6 @@ class VentaRequest(BaseModel):
 
 class ClienteRequest(BaseModel):
     """Representa los datos de una persona (cliente) para peticiones"""
-    uid: str
     cte_id: Optional[int] = 0
     nombre: str
     apellidos: str
@@ -32,7 +30,6 @@ class ClienteRequest(BaseModel):
 
 class ProductoRequest(BaseModel):
     """Representa los datos de un producto para peticiones"""
-    uid: str
     sku: Optional[int] = 0
     desc: str
     precio: float

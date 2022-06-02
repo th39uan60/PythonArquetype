@@ -4,3 +4,4 @@ SQLAlchemy==1.4.32
 psycopg2==2.9.3
 uvicorn==0.17.6
 requests==2.27.1
+pykafka==2.8.0

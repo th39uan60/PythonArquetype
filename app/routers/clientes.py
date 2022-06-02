@@ -9,15 +9,17 @@ from fastapi import (APIRouter, Header, HTTPException)
 from ..schemas.requests import ClienteRequest
 from ..schemas.responses import ClienteResponse
 from ..models.cliente_dao import ClienteDAO
-from ..security import requiere_token
+from .token import requiere_token
 from ..constantes import (HTTP_404, HTTP_500)
 
 router = APIRouter()
 
 
-@router.get("/clientes/{cte_id}", response_model=ClienteResponse, )
+@router.get("/clientes/{cte_id}", response_model=ClienteResponse)
 @requiere_token
-def obtener_cliente(cte_id: int, token: Optional[str] = Header(None)):
+def obtener_cliente(
+        cte_id: int, uid: str = Header(None),
+        token: Optional[str] = Header(None)):
     """Obtiene un cliente por medio de su id
     param cte_id: id del cliente a buscar
     return: Cliente
@@ -37,7 +39,9 @@ def obtener_cliente(cte_id: int, token: Optional[str] = Header(None)):
 
 @router.post("/clientes/", response_model=int)
 @requiere_token
-def alta_cliente(cte: ClienteRequest, token: Optional[str] = Header(None)):
+def alta_cliente(
+        cte: ClienteRequest, uid: str = Header(None),
+        token: Optional[str] = Header(None)):
     """Da de alta un cliente en la base de datos
     param prod: ClienteRequest
     return: int

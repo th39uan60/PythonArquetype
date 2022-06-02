@@ -2,8 +2,6 @@
 el funcionamiento de los servicios
 """
 
-# definir en el deployment.yaml la info del micro-servicio para validar token
-VALIDAR_TOKEN_URL = "/app_blindaje/ms-validar-token"
 # HTTP_200 = 200
 HTTP_401 = 401
 HTTP_404 = 404

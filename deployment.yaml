@@ -44,3 +44,23 @@ spec:
             secretKeyRef:
               name: pos-secrets
               key: password_bd
+        - name: KAFKAURL
+          valueFrom:
+            secretKeyRef:
+              name: pos-secrets
+              key: kafka_service_url
+        - name: KAFKATICKETS
+          valueFrom:
+            secretKeyRef:
+              name: pos-secrets
+              key: kafka_ticket_topic
+        - name: GENERARTOKEN_URL
+          valueFrom:
+            secretKeyRef:
+              name: pos-secrets
+              key: generar_token_url
+        - name: VALIDARTOKEN_URL
+          valueFrom:
+            secretKeyRef:
+              name: pos-secrets
+              key: validar_token_url

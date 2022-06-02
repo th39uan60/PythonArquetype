@@ -1,7 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: python-arq
   name: pos-alb
   annotations:
     kubernetes.io/ingress.class: alb

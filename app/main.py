@@ -3,7 +3,7 @@ y donde se incluyen los routers relacionados
 """
 
 from fastapi import FastAPI
-from .routers import (clientes, productos, ventas)
+from .routers import (clientes, productos, ventas, token)
 from .models import bd
 
 # creamos la estructura de base de datos
@@ -15,6 +15,7 @@ app = FastAPI()
 app.include_router(clientes.router)
 app.include_router(productos.router)
 app.include_router(ventas.router)
+app.include_router(token.router)
 
 
 @app.get("/")

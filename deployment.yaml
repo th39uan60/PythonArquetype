@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       run: pos-app
-  replicas: 2
+  replicas: 2 # esto se deben sustituir por el auto-scaling para administración de recursos automática
   template:
     metadata:
       labels:
@@ -15,6 +15,7 @@ spec:
       containers:
       # el nombre de la imagen (en este caso dentro de docker hub)
       - image: th39uan60/python_arq
+        imagePullPolicy: Always # Never / IfNotPresent / Always
         # aquí se definen las recursos que usará cada POD a desplegar de esta aplicación
         resources:
             limits:
@@ -29,6 +30,11 @@ spec:
         name: pos-container
         # aquí se definen los "secrets" que se usarán como variables de entorno
         env: 
+        - name: PROVEEDORBD # postgresql / sqlite
+          valueFrom:
+            secretKeyRef:
+              name: pos-secrets
+              key: proveedor_bd
         - name: SERVIDORBD # servidor + puerto
           valueFrom:
             secretKeyRef:
@@ -44,7 +50,7 @@ spec:
             secretKeyRef:
               name: pos-secrets
               key: password_bd
-        - name: KAFKAURL
+        - name: KAFKAURL # servidor + puerto
           valueFrom:
             secretKeyRef:
               name: pos-secrets

@@ -44,12 +44,14 @@ def generar_token(
     param mac: mac address del host
     return: str
     """
+
+    response = None
     try:
         TOKEN_URL = decodificar_base64(getenv("GENERARTOKEN_URL"))
         response = requests.post(
             TOKEN_URL,
             headers={"uid": uid},
-            data={
+            json={
                 "idUsuario": idusuario, "password": psw, "ip": ip,
                 "mac": mac}
             )
@@ -62,7 +64,7 @@ def generar_token(
         if response is None:
             mensaje = f"ex: {ex}, dummy: {DUMMY_TOKEN}"
         else:
-            mensaje = f"error: {response['detalles']}, dummy: {DUMMY_TOKEN}"
+            mensaje = f"error: {response.json()}, dummy: {DUMMY_TOKEN}"
 
     return mensaje
 
@@ -78,7 +80,7 @@ def validar_token(token: str, uid: str, usuario: str):
         response = requests.post(
             TOKEN_URL,
             headers={"uid": uid},
-            data={
+            json={
                 "idUsuario": usuario,
                 "token": token}
             )

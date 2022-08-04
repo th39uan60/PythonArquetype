@@ -4,13 +4,19 @@ metadata:
   name: pos-alb
   annotations:
     kubernetes.io/ingress.class: alb
+    # internal (private) / internet-facing (public)
     alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: subnet-0c8f35ca5ea30d708, subnet-0e1f9d3cd9752f383
+    # alb.ingress.kubernetes.io/subnets: subnet-0949aff215784a1d6, subnet-0f0a59cdafc2942f7 # publicas 1 y 2
+    alb.ingress.kubernetes.io/subnets: subnet-0c8f35ca5ea30d708, subnet-0e1f9d3cd9752f383 # privadas 1 y 2
+    # se agrega el grupo para compartir el mismo ALB
+    alb.ingress.kubernetes.io/group.name: alb-remesas-dev
 spec:
   rules:
     - http:
         paths:
-        - path: /
+        # la ruta base deberá tener un prefijo que identifique a nuestro servicio como único.
+        # en este ejemplo, usamos POS de "point of sale" 
+        - path: /pos
           pathType: Prefix
           backend:
             service:

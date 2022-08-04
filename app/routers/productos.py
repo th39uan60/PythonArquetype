@@ -4,6 +4,7 @@
 la administración de productos
 """
 
+import logging
 from typing import Optional
 from fastapi import (APIRouter, Header, HTTPException)
 from ..schemas.requests import ProductoRequest
@@ -15,7 +16,7 @@ from ..constantes import (HTTP_404, HTTP_500)
 router = APIRouter()
 
 
-@router.get("/productos/{sku}", response_model=ProductoResponse)
+@router.get("/pos/productos/{sku}", response_model=ProductoResponse)
 @requiere_token
 def obtener_producto(
         sku: int, uid: str = Header(None),
@@ -27,6 +28,7 @@ def obtener_producto(
     try:
         producto = ProductoDAO.obtener(sku)
     except Exception as ex:
+        logging.error(f"productos.obtener_producto() - {ex}")
         raise HTTPException(status_code=HTTP_500, detail=str(ex)) from ex
     else:
         if producto is None:
@@ -37,7 +39,7 @@ def obtener_producto(
     return producto
 
 
-@router.post("/productos/", response_model=int)
+@router.post("/pos/productos/", response_model=int)
 @requiere_token
 def registrar_producto(
         prod: ProductoRequest, uid: str = Header(None),
@@ -49,6 +51,7 @@ def registrar_producto(
     try:
         sku = ProductoDAO.registrar(prod)
     except Exception as ex:
+        logging.error(f"productos.registrar_producto() - {ex}")
         raise HTTPException(status_code=HTTP_500, detail=str(ex)) from ex
 
     return sku

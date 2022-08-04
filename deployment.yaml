@@ -12,10 +12,12 @@ spec:
       labels:
         run: pos-app
     spec:
+      imagePullSecrets:
+        - name: gitlab-shl
       containers:
-      # el nombre de la imagen (en este caso dentro de docker hub)
-      - image: th39uan60/python_arq
-        imagePullPolicy: Always # Never / IfNotPresent / Always
+      # el nombre de la imagen
+      - image: registry.gitlab.com/transformingcell/python_arq:latest
+        imagePullPolicy: IfNotPresent # Never / IfNotPresent / Always
         # aquí se definen las recursos que usará cada POD a desplegar de esta aplicación
         resources:
             limits:
@@ -30,6 +32,11 @@ spec:
         name: pos-container
         # aquí se definen los "secrets" que se usarán como variables de entorno
         env: 
+        - name: LOGLEVEL # filtro de logs registrados
+          valueFrom:
+            secretKeyRef:
+              name: pos-secrets
+              key: logging_lv
         - name: PROVEEDORBD # postgresql / sqlite
           valueFrom:
             secretKeyRef:

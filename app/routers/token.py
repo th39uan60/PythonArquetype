@@ -6,6 +6,7 @@ de administración de tokens de seguridad
 
 from os import getenv
 from functools import wraps
+import logging
 from typing import (Any, Callable)
 import requests
 from fastapi import (APIRouter, Header, Response)
@@ -27,13 +28,14 @@ def requiere_token(func: Callable) -> Callable:
                 return Response(status_code=HTTP_401)
 
             return func(*args, **kwargs)
-        except requests.HTTPError as error:
-            return Response(status_code=error.response.status_code)
+        except requests.HTTPError as ex:
+            logging.error(f"token.requiere_token() - {ex}")
+            return Response(status_code=ex.response.status_code)
 
     return wrapper
 
 
-@router.post("/token/", response_model=str)
+@router.post("/pos/token/", response_model=str)
 def generar_token(
         idusuario: str, psw: str, ip: str, mac: str,
         uid: str = Header(None)):
@@ -61,6 +63,8 @@ def generar_token(
         else:
             mensaje = f"detalles: {response['detalles']}, dummy: {DUMMY_TOKEN}"
     except Exception as ex:
+        logging.error(f"token.generar_token() - {ex}")
+
         if response is None:
             mensaje = f"ex: {ex}, dummy: {DUMMY_TOKEN}"
         else:
@@ -69,7 +73,7 @@ def generar_token(
     return mensaje
 
 
-def validar_token(token: str, uid: str, usuario: str):
+def validar_token(token: str, uid: str, usuario: str) -> bool:
     """Valida un token de seguridad enviado
     return: boolean
     """
@@ -84,7 +88,8 @@ def validar_token(token: str, uid: str, usuario: str):
                 "idUsuario": usuario,
                 "token": token}
             )
-
+        
+        logging.debug(f"token.validar_token() - RESPUESTA: {response}")
         resultado = response is not None
 
     return resultado

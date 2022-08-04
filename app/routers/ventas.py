@@ -4,6 +4,7 @@
 la administración de ventas
 """
 
+import logging
 from typing import Optional
 from fastapi import (APIRouter, Header, HTTPException)
 from ..schemas.requests import VentaRequest
@@ -16,7 +17,7 @@ from ..ticket import generar_ticket
 router = APIRouter()
 
 
-@router.get("/ventas/{vta_id}", response_model=VentaResponse)
+@router.get("/pos/ventas/{vta_id}", response_model=VentaResponse)
 @requiere_token
 def obtener_venta(
         vta_id: int, uid: str = Header(None),
@@ -28,6 +29,7 @@ def obtener_venta(
     try:
         venta = VentaDAO.obtener(vta_id)
     except Exception as ex:
+        logging.error(f"ventas.obtener_venta() - {ex}")
         raise HTTPException(status_code=HTTP_500, detail=str(ex)) from ex
     else:
         if venta is None:
@@ -38,7 +40,7 @@ def obtener_venta(
     return venta
 
 
-@router.post("/ventas/", response_model=int)
+@router.post("/pos/ventas/", response_model=int)
 @requiere_token
 def generar_venta(
         vta: VentaRequest, uid: str = Header(None),
@@ -51,6 +53,7 @@ def generar_venta(
         vta_id = VentaDAO.generar(vta)
         generar_ticket(vta)
     except Exception as ex:
+        logging.error(f"ventas.generar_venta() - {ex}")
         raise HTTPException(status_code=HTTP_500, detail=str(ex)) from ex
 
     return vta_id

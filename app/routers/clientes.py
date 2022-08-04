@@ -5,6 +5,7 @@ la administración de clientes
 """
 
 from typing import Optional
+import logging
 from fastapi import (APIRouter, Header, HTTPException)
 from ..schemas.requests import ClienteRequest
 from ..schemas.responses import ClienteResponse
@@ -15,7 +16,7 @@ from ..constantes import (HTTP_404, HTTP_500)
 router = APIRouter()
 
 
-@router.get("/clientes/{cte_id}", response_model=ClienteResponse)
+@router.get("/pos/clientes/{cte_id}", response_model=ClienteResponse)
 @requiere_token
 def obtener_cliente(
         cte_id: int, uid: str = Header(None),
@@ -27,6 +28,7 @@ def obtener_cliente(
     try:
         cliente = ClienteDAO.obtener(cte_id)
     except Exception as ex:
+        logging.error(f"clientes.obtener_cliente() - {ex}")
         raise HTTPException(status_code=HTTP_500, detail=str(ex)) from ex
     else:
         if cliente is None:
@@ -37,7 +39,7 @@ def obtener_cliente(
     return cliente
 
 
-@router.post("/clientes/", response_model=int)
+@router.post("/pos/clientes/", response_model=int)
 @requiere_token
 def alta_cliente(
         cte: ClienteRequest, uid: str = Header(None),
@@ -49,6 +51,7 @@ def alta_cliente(
     try:
         cte_id = ClienteDAO.dar_alta(cte)
     except Exception as ex:
+        logging.error(f"clientes.alta_cliente() - {ex}")
         raise HTTPException(status_code=HTTP_500, detail=str(ex)) from ex
 
     return cte_id
